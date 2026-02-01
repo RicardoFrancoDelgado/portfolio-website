@@ -1,0 +1,28 @@
+import useInView from "./hooks/useInView";
+
+export default function Contact() {
+  const [contatoRef, contatoInView] = useInView({
+    once: true,
+    threshold: 0.15,
+  });
+  return (
+    <section
+      id="contato"
+      ref={contatoRef}
+      className={`w-full min-h-screen flex items-center justify-center bg-zinc-900 ${
+        contatoInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+      } transition-all duration-700`}
+    >
+      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
+        <h2 className="text-4xl sm:text-5xl font-extrabold mb-6">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+            Contato
+          </span>
+        </h2>
+        <p className="text-lg sm:text-xl text-white/85">
+          Entre em contato comigo pelas redes sociais ou por email!
+        </p>
+      </div>
+    </section>
+  );
+}
