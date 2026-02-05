@@ -1,17 +1,19 @@
-import useInView from "./hooks/useInView";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "motion/react";
 
 export default function Contact() {
-  const [contatoRef, contatoInView] = useInView({
-    once: true,
-    threshold: 0.15,
-  });
+  // const sectionVariant = {
+  //   hidden: { opacity: 0, y: 18 },
+  //   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+  // };
   return (
-    <section
+    <motion.section
       id="contato"
-      ref={contatoRef}
-      className={`w-full min-h-screen flex items-center justify-center bg-zinc-900 will-change-transform ${
-        contatoInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-      } transition-all duration-700 backface-hidden`}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="w-full min-h-screen flex items-center justify-center bg-zinc-900 will-change-transform backface-hidden"
     >
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-6">
@@ -23,6 +25,6 @@ export default function Contact() {
           Entre em contato comigo pelas redes sociais ou por email!
         </p>
       </div>
-    </section>
+    </motion.section>
   );
 }

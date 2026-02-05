@@ -1,4 +1,5 @@
-import useInView from "./hooks/useInView";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "motion/react";
 
 export default function Projects() {
   const projects = [
@@ -35,18 +36,23 @@ export default function Projects() {
     },
   ];
 
-  const [projetosRef, projetosInView] = useInView({
-    once: true,
-    threshold: 0.15,
-  });
+  // const sectionVariant = {
+  //   hidden: { opacity: 0, y: 18 },
+  //   visible: {
+  //     opacity: 1,
+  //     y: 0,
+  //     transition: { duration: 0.7, ease: "easeOut" },
+  //   },
+  // };
 
   return (
-    <section
+    <motion.section
       id="projetos"
-      ref={projetosRef}
-      className={`w-full min-h-screen flex items-center justify-center bg-zinc-900 will-change-transform ${
-        projetosInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-      } transition-all duration-700 backface-hidden`}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="w-full min-h-screen flex items-center justify-center bg-zinc-900 will-change-transform backface-hidden"
     >
       <div className="w-full px-4 py-20">
         <h2 className="text-4xl sm:text-5xl font-extrabold text-center mb-12">
@@ -112,6 +118,6 @@ export default function Projects() {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

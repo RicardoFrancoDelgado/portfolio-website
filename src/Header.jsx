@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 export default function Header() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
+  const headerRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -19,8 +20,24 @@ export default function Header() {
     }
   }, [open]);
 
+  function handleNavigate(e, id) {
+    if (e && e.preventDefault) e.preventDefault();
+    setOpen(false);
+    const el = document.getElementById(id);
+    const headerEl = headerRef.current;
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+    if (el) {
+      const y =
+        el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 8;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }
+
   return (
-    <header className="w-full fixed top-0 left-0 z-50 bg-zinc-900/80 backdrop-blur-md border-b border-orange-500/20 shadow-lg">
+    <header
+      ref={headerRef}
+      className="w-full fixed top-0 left-0 z-50 bg-zinc-900/80 backdrop-blur-md border-b border-orange-500/20 shadow-lg"
+    >
       <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
         <div className="flex items-center">
           <a
@@ -56,6 +73,7 @@ export default function Header() {
             <li>
               <a
                 href="#sobre"
+                onClick={(e) => handleNavigate(e, "sobre")}
                 className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
               >
                 Sobre
@@ -65,6 +83,7 @@ export default function Header() {
             <li>
               <a
                 href="#projetos"
+                onClick={(e) => handleNavigate(e, "projetos")}
                 className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
               >
                 Projetos
@@ -74,6 +93,7 @@ export default function Header() {
             <li>
               <a
                 href="#contato"
+                onClick={(e) => handleNavigate(e, "contato")}
                 className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
               >
                 Contato
@@ -86,21 +106,21 @@ export default function Header() {
             <div className="md:hidden absolute right-0 mt-2 w-48 bg-zinc-800/95 backdrop-blur-lg rounded-lg shadow-xl py-2 border border-orange-500/30 animate-in fade-in slide-in-from-top-2 duration-300">
               <a
                 href="#sobre"
-                onClick={() => setOpen(false)}
+                onClick={(e) => handleNavigate(e, "sobre")}
                 className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
               >
                 Sobre
               </a>
               <a
                 href="#projetos"
-                onClick={() => setOpen(false)}
+                onClick={(e) => handleNavigate(e, "projetos")}
                 className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
               >
                 Projetos
               </a>
               <a
                 href="#contato"
-                onClick={() => setOpen(false)}
+                onClick={(e) => handleNavigate(e, "contato")}
                 className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
               >
                 Contato
