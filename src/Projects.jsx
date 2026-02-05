@@ -23,6 +23,16 @@ export default function Projects() {
       deployUrl: "https://github.com/RicardoFrancoDelgado/devbook-project",
       githubUrl: "https://github.com/RicardoFrancoDelgado/devbook-project",
     },
+    {
+      id: 3,
+      title: "Projeto Ação Verde",
+      description:
+        "O site Verde Ação é uma página de apresentação de um projeto ambiental que convida pessoas a se tornarem voluntárias em ações de cuidado com o planeta. A ideia central é inspirar mudanças reais através de pequenas atitudes ecológicas.",
+      image: "/projects/verde-acao.png",
+      technologies: ["HTML", "CSS", "SCSS"],
+      deployUrl: "https://ricardofrancodelgado.github.io/projeto-acao-verde/",
+      githubUrl: "https://github.com/RicardoFrancoDelgado/projeto-acao-verde",
+    },
   ];
 
   const [projetosRef, projetosInView] = useInView({
