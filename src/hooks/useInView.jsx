@@ -15,13 +15,18 @@ export default function useInView(options = { once: true, threshold: 0.2 }) {
           if (options.once) observer.unobserve(el);
         }
       },
-      { threshold: options.threshold },
+      {
+        threshold: options.threshold,
+        rootMargin: "0px",
+      },
     );
 
     observer.observe(el);
 
-    return () => observer.disconnect();
-  }, [ref, options.once, options.threshold]);
+    return () => {
+      observer.disconnect();
+    };
+  }, [options.once, options.threshold]);
 
   return [ref, inView];
 }

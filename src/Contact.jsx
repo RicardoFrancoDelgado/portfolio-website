@@ -9,9 +9,9 @@ export default function Contact() {
     <section
       id="contato"
       ref={contatoRef}
-      className={`w-full min-h-screen flex items-center justify-center bg-zinc-900 ${
+      className={`w-full min-h-screen flex items-center justify-center bg-zinc-900 will-change-transform ${
         contatoInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-      } transition-all duration-700`}
+      } transition-all duration-700 backface-hidden`}
     >
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-6">

@@ -17,9 +17,9 @@ export default function AboutDetails() {
     <section
       id="sobre"
       ref={sobreRef}
-      className={`w-full min-h-screen flex items-center justify-center bg-zinc-900 ${
+      className={`w-full min-h-screen flex items-center justify-center bg-zinc-900 will-change-transform ${
         sobreInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-      } transition-all duration-700`}
+      } transition-all duration-700 backface-hidden`}
     >
       <div className="max-w-6xl mx-auto px-4 py-20 w-full">
         <h2 className="text-4xl sm:text-5xl font-extrabold text-center mb-10">

@@ -7,7 +7,7 @@ export default function App() {
   return (
     <>
       <Header />
-      <main className="bg-zinc-900 w-full overflow-x-hidden">
+      <main className="w-full">
         <About />
         <Projects />
         <Contact />
