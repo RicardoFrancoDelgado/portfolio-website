@@ -21,115 +21,113 @@ export default function Header() {
   }, [open]);
 
   function handleNavigate(e, id) {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setOpen(false);
-
     const el = document.getElementById(id);
-
+    const headerEl = headerRef.current;
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
     if (el) {
-      const headerHeight = headerRef.current?.offsetHeight || 64;
-      const elementPosition = el.offsetTop;
-      const offsetPosition = elementPosition - headerHeight - 16;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+      const y =
+        el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 8;
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   }
 
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800"
+      className="w-full fixed top-0 left-0 z-50 bg-zinc-900/80 backdrop-blur-md border-b border-orange-500/20 shadow-lg"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex-shrink-0">
-            <span className="text-2xl font-bold text-orange-400">
-              Portfolio
-            </span>
-          </div>
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
+        <div className="flex items-center">
+          <a
+            href="#inicio"
+            className="cursor-pointer select-none text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 font-extrabold text-lg sm:text-2xl hover:opacity-80 transition-opacity duration-300"
+          >
+            {"<ricardo/>"}
+          </a>
+        </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <a
-              href="#sobre"
-              onClick={(e) => handleNavigate(e, "sobre")}
-              className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
-            >
-              Sobre
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-400 transition-all duration-300 group-hover:w-full"></span>
-            </a>
-            <a
-              href="#projetos"
-              onClick={(e) => handleNavigate(e, "projetos")}
-              className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
-            >
-              Projetos
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-400 transition-all duration-300 group-hover:w-full"></span>
-            </a>
-            <a
-              href="#contato"
-              onClick={(e) => handleNavigate(e, "contato")}
-              className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
-            >
-              Contato
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-400 transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          </nav>
-
-          {/* Mobile Menu Button */}
+        <nav className="relative" ref={menuRef}>
           <button
             onClick={() => setOpen((s) => !s)}
             aria-label="Toggle menu"
             className="md:hidden p-2 rounded-lg hover:bg-orange-500/20 transition-all duration-300"
           >
             <svg
-              className="w-6 h-6 text-white"
+              className="w-6 h-6 text-white transition-transform duration-300"
               fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              {open ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+              />
             </svg>
           </button>
-        </div>
 
-        {/* Mobile Menu */}
-        {open && (
-          <nav ref={menuRef} className="md:hidden pb-4 space-y-1">
-            <a
-              href="#sobre"
-              onClick={(e) => handleNavigate(e, "sobre")}
-              className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
-            >
-              Sobre
-            </a>
-            <a
-              href="#projetos"
-              onClick={(e) => handleNavigate(e, "projetos")}
-              className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
-            >
-              Projetos
-            </a>
-            <a
-              href="#contato"
-              onClick={(e) => handleNavigate(e, "contato")}
-              className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
-            >
-              Contato
-            </a>
-          </nav>
-        )}
+          <ul className="hidden md:flex gap-8 text-sm font-medium items-center">
+            <li>
+              <a
+                href="#sobre"
+                onClick={(e) => handleNavigate(e, "sobre")}
+                className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
+              >
+                Sobre
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 group-hover:w-full transition-all duration-300"></span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#projetos"
+                onClick={(e) => handleNavigate(e, "projetos")}
+                className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
+              >
+                Projetos
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 group-hover:w-full transition-all duration-300"></span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#contato"
+                onClick={(e) => handleNavigate(e, "contato")}
+                className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
+              >
+                Contato
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 group-hover:w-full transition-all duration-300"></span>
+              </a>
+            </li>
+          </ul>
+
+          {open && (
+            <div className="md:hidden absolute right-0 mt-2 w-48 bg-zinc-800/95 backdrop-blur-lg rounded-lg shadow-xl py-2 border border-orange-500/30 animate-in fade-in slide-in-from-top-2 duration-300">
+              <a
+                href="#sobre"
+                onClick={(e) => handleNavigate(e, "sobre")}
+                className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
+              >
+                Sobre
+              </a>
+              <a
+                href="#projetos"
+                onClick={(e) => handleNavigate(e, "projetos")}
+                className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
+              >
+                Projetos
+              </a>
+              <a
+                href="#contato"
+                onClick={(e) => handleNavigate(e, "contato")}
+                className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
+              >
+                Contato
+              </a>
+            </div>
+          )}
+        </nav>
       </div>
     </header>
   );
