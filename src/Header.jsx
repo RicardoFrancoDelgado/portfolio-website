@@ -1,54 +1,45 @@
 import { useState, useEffect, useRef } from "react";
 
+const NAV_LINKS = [
+  { label: "Sobre", href: "#sobre" },
+  { label: "Projetos", href: "#projetos" },
+  { label: "Contato", href: "#contato" },
+];
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
-  const headerRef = useRef(null);
 
   useEffect(() => {
+    if (!open) return;
+
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setOpen(false);
       }
     }
 
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  function handleNavigate(e, id) {
-    if (e && e.preventDefault) e.preventDefault();
+  function closeMenu() {
     setOpen(false);
-    const el = document.getElementById(id);
-    const headerEl = headerRef.current;
-    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
-    if (el) {
-      const y =
-        el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 8;
-      window.scrollTo({ top: y, behavior: "smooth" });
-    }
   }
 
   return (
-    <header
-      ref={headerRef}
-      className="w-full fixed top-0 left-0 z-50 bg-zinc-900/80 backdrop-blur-md border-b border-orange-500/20 shadow-lg"
-    >
+    <header className="w-full fixed top-0 left-0 z-50 bg-zinc-900/80 backdrop-blur-md border-b border-orange-500/20 shadow-lg">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
-        <div className="flex items-center">
-          <a
-            href="#inicio"
-            className="cursor-pointer select-none text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 font-extrabold text-lg sm:text-2xl hover:opacity-80 transition-opacity duration-300"
-          >
-            {"<ricardo/>"}
-          </a>
-        </div>
+        <a
+          href="#inicio"
+          onClick={closeMenu}
+          className="cursor-pointer select-none text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 font-extrabold text-lg sm:text-2xl hover:opacity-80 transition-opacity duration-300"
+        >
+          {"<ricardo/>"}
+        </a>
 
         <nav className="relative" ref={menuRef}>
+          {/* Botão hambúrguer mobile */}
           <button
             onClick={() => setOpen((s) => !s)}
             aria-label="Toggle menu"
@@ -69,62 +60,34 @@ export default function Header() {
             </svg>
           </button>
 
+          {/* Links desktop */}
           <ul className="hidden md:flex gap-8 text-sm font-medium items-center">
-            <li>
-              <a
-                href="#sobre"
-                onClick={(e) => handleNavigate(e, "sobre")}
-                className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
-              >
-                Sobre
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 group-hover:w-full transition-all duration-300"></span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#projetos"
-                onClick={(e) => handleNavigate(e, "projetos")}
-                className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
-              >
-                Projetos
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 group-hover:w-full transition-all duration-300"></span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#contato"
-                onClick={(e) => handleNavigate(e, "contato")}
-                className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
-              >
-                Contato
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 group-hover:w-full transition-all duration-300"></span>
-              </a>
-            </li>
+            {NAV_LINKS.map(({ label, href }) => (
+              <li key={href}>
+                <a
+                  href={href}
+                  className="text-white/90 hover:text-orange-400 transition-colors duration-300 relative group"
+                >
+                  {label}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 group-hover:w-full transition-all duration-300" />
+                </a>
+              </li>
+            ))}
           </ul>
 
+          {/* Menu dropdown mobile */}
           {open && (
             <div className="md:hidden absolute right-0 mt-2 w-48 bg-zinc-800/95 backdrop-blur-lg rounded-lg shadow-xl py-2 border border-orange-500/30 animate-in fade-in slide-in-from-top-2 duration-300">
-              <a
-                href="#sobre"
-                onClick={(e) => handleNavigate(e, "sobre")}
-                className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
-              >
-                Sobre
-              </a>
-              <a
-                href="#projetos"
-                onClick={(e) => handleNavigate(e, "projetos")}
-                className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
-              >
-                Projetos
-              </a>
-              <a
-                href="#contato"
-                onClick={(e) => handleNavigate(e, "contato")}
-                className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
-              >
-                Contato
-              </a>
+              {NAV_LINKS.map(({ label, href }) => (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={closeMenu}
+                  className="block px-4 py-3 text-sm text-white hover:bg-orange-500/20 hover:text-orange-400 transition-all duration-300 rounded-md mx-2"
+                >
+                  {label}
+                </a>
+              ))}
             </div>
           )}
         </nav>
