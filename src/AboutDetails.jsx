@@ -12,11 +12,6 @@ export default function AboutDetails() {
     "SQL",
   ];
 
-  // const sectionVariant = {
-  //   hidden: { opacity: 0, y: 18 },
-  //   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-  // };
-
   return (
     <motion.section
       id="sobre"
