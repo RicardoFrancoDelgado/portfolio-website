@@ -34,6 +34,27 @@ export default function Projects() {
       deployUrl: "https://ricardofrancodelgado.github.io/projeto-acao-verde/",
       githubUrl: "https://github.com/RicardoFrancoDelgado/projeto-acao-verde",
     },
+    {
+      id: 4,
+      title: "Projeto Viva Bem",
+      description:
+        "O projeto viva bem visa orientar sobre os cuidados com a saúde ",
+      image: "/projects/viva-bem-project.png",
+      technologies: ["HTML", "CSS", "SCSS"],
+      deployUrl:
+        "https://viva-bem-desafio-qq1nmnxca-ricardofrancodelgados-projects.vercel.app/",
+      githubUrl: "https://github.com/RicardoFrancoDelgado/viva-bem-desafio",
+    },
+    {
+      id: 5,
+      title: "Projeto Connect",
+      description:
+        "A plataforma Connect visa cadastrar empresas, com projetos sociais e treinamentos organizados para ações sociais",
+      image: "/projects/connect-project.png",
+      technologies: ["React", "SCSS", "react-router-dom", "HTML"],
+      deployUrl: "https://connect-pi-umber.vercel.app/",
+      githubUrl: "https://github.com/RicardoFrancoDelgado/desafio-connect-vnw",
+    },
   ];
 
   return (
