@@ -5,6 +5,22 @@ export default function Projects() {
   const projects = [
     {
       id: 1,
+      title: "Medication Reminder",
+      description:
+        "Aplicação que avisa quando um remédio cadastrado precisa ser tomado, com a possibilidade de cadastrar novos remédios, tudo via Whatsapp",
+      image: "/projects/medication-reminder.png",
+      technologies: [
+        "Java",
+        "Spring Boot",
+        "Twilio API",
+        "PostgreSQL",
+        "Flyway",
+      ],
+      deployUrl: "https://github.com/RicardoFrancoDelgado/medication-reminder",
+      githubUrl: "https://github.com/RicardoFrancoDelgado/medication-reminder",
+    },
+    {
+      id: 2,
       title: "Desafio VNW - React Router DOM",
       description:
         "Desafio proposto nas aulas do curso ministrado pelo pessoal da vai na web, onde era necessario utilizar as tecnologias react, jsx, scss e react router dom",
@@ -15,7 +31,7 @@ export default function Projects() {
         "https://github.com/RicardoFrancoDelgado/react-router-desafio-vnw",
     },
     {
-      id: 2,
+      id: 3,
       title: "Devbook API",
       description:
         "API da aplicação devbook desenvolvida em conjunto no curso de fundamentos da linguagem Go, com o uso do MySQL, autenticação e boas práticas",
@@ -25,7 +41,7 @@ export default function Projects() {
       githubUrl: "https://github.com/RicardoFrancoDelgado/devbook-project",
     },
     {
-      id: 3,
+      id: 4,
       title: "Projeto Ação Verde",
       description:
         "O site Verde Ação é uma página de apresentação de um projeto ambiental que convida pessoas a se tornarem voluntárias em ações de cuidado com o planeta. A ideia central é inspirar mudanças reais através de pequenas atitudes ecológicas.",
@@ -35,7 +51,7 @@ export default function Projects() {
       githubUrl: "https://github.com/RicardoFrancoDelgado/projeto-acao-verde",
     },
     {
-      id: 4,
+      id: 5,
       title: "Projeto Viva Bem",
       description:
         "O projeto viva bem visa orientar sobre os cuidados com a saúde ",
@@ -46,7 +62,7 @@ export default function Projects() {
       githubUrl: "https://github.com/RicardoFrancoDelgado/viva-bem-desafio",
     },
     {
-      id: 5,
+      id: 6,
       title: "Projeto Connect",
       description:
         "A plataforma Connect visa cadastrar empresas, com projetos sociais e treinamentos organizados para ações sociais",

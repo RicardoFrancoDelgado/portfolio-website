@@ -4,6 +4,9 @@ import { motion } from "motion/react";
 export default function AboutDetails() {
   const techs = [
     "JavaScript",
+    "Java",
+    "Spring Boot",
+    "Angular",
     "TypeScript",
     "Node.js",
     "React",
