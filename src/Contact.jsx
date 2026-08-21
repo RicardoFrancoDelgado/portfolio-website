@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 // eslint-disable-next-line no-unused-vars
-import { motion } from "motion/react";
+import { motion, AnimatePresence, useSpring, useReducedMotion } from "motion/react";
 import {
   Linkedin,
   Github,
@@ -9,6 +9,7 @@ import {
   Check,
   ExternalLink,
 } from "lucide-react";
+import PromptLine from "./PromptLine";
 
 const EMAIL_ADDRESS = "ricardodelgado693@gmail.com";
 
@@ -95,6 +96,33 @@ function LinkCard({ link }) {
   const [copied, setCopied] = useState(false);
   const Icon = link.icon;
   const isEmail = link.id === "email";
+  const reduceMotion = useReducedMotion();
+  const cardRef = useRef(null);
+  const [canTilt] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches
+  );
+
+  const rotateX = useSpring(0, { stiffness: 200, damping: 22, mass: 0.4 });
+  const rotateY = useSpring(0, { stiffness: 200, damping: 22, mass: 0.4 });
+
+  function handlePointerMove(e) {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    el.style.setProperty("--sx", `${px * 100}%`);
+    el.style.setProperty("--sy", `${py * 100}%`);
+    if (canTilt && !reduceMotion) {
+      rotateY.set((px - 0.5) * 6);
+      rotateX.set((py - 0.5) * -6);
+    }
+  }
+
+  function handlePointerLeave() {
+    rotateX.set(0);
+    rotateY.set(0);
+  }
 
   function handleCopyEmail(e) {
     e.preventDefault();
@@ -108,17 +136,31 @@ function LinkCard({ link }) {
   return (
     <motion.div variants={cardVariants}>
       <motion.a
+        ref={cardRef}
         href={link.href}
         target={link.external ? "_blank" : undefined}
         rel={link.external ? "noopener noreferrer" : undefined}
-        whileHover={{ scale: 1.03, y: -4 }}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+        whileHover={{ scale: 1.02, y: -4 }}
         whileTap={{ scale: 0.98 }}
-        className={`group relative flex items-center gap-4 sm:gap-5 w-full p-4 sm:p-5 rounded-xl bg-zinc-800/60 border border-orange-500/15 backdrop-blur-sm transition-all duration-300 cursor-pointer ${link.hoverBorder} ${link.hoverShadow} hover:shadow-lg hover:bg-zinc-800/80`}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className={`group relative flex items-center gap-4 sm:gap-5 w-full p-4 sm:p-5 rounded-xl bg-zinc-800/60 border border-orange-500/15 backdrop-blur-sm transition-[border-color,box-shadow,background-color] duration-300 cursor-pointer overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 ${link.hoverBorder} ${link.hoverShadow} hover:shadow-lg hover:bg-zinc-800/80 focus-visible:shadow-lg focus-visible:bg-zinc-800/80`}
       >
+        {/* Spotlight that tracks the cursor, standing in for ambient ceiling light on the module */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background:
+              "radial-gradient(220px circle at var(--sx, 50%) var(--sy, 50%), rgba(251,191,36,0.12), transparent 70%)",
+          }}
+        />
+
         {/* Gradient glow behind icon */}
         <div className="relative shrink-0">
           <div
-            className={`absolute inset-0 bg-linear-to-br ${link.iconBg} rounded-xl blur-md opacity-0 group-hover:opacity-40 transition-opacity duration-500`}
+            className={`absolute inset-0 bg-linear-to-br ${link.iconBg} rounded-xl blur-md opacity-0 group-hover:opacity-40 group-focus-visible:opacity-40 transition-opacity duration-500`}
           />
           <div
             className={`relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-linear-to-br ${link.iconBg} shadow-lg`}
@@ -129,10 +171,10 @@ function LinkCard({ link }) {
 
         {/* Text content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-linear-to-r group-hover:from-yellow-400 group-hover:to-orange-500 transition-all duration-300">
+          <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-linear-to-r group-hover:from-yellow-400 group-hover:to-orange-500 group-focus-visible:text-transparent group-focus-visible:bg-clip-text group-focus-visible:bg-linear-to-r group-focus-visible:from-yellow-400 group-focus-visible:to-orange-500 transition-all duration-300">
             {link.label}
           </h3>
-          <p className="text-xs sm:text-sm text-white/50 group-hover:text-white/70 transition-colors duration-300 truncate">
+          <p className="text-xs sm:text-sm text-white/50 group-hover:text-white/70 group-focus-visible:text-white/70 transition-colors duration-300 truncate">
             {link.description}
           </p>
         </div>
@@ -144,8 +186,9 @@ function LinkCard({ link }) {
               onClick={handleCopyEmail}
               whileHover={{ scale: 1.15 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 hover:border-orange-500/40 transition-all duration-300"
+              className="p-3.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 hover:border-orange-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 focus-visible:bg-white/15 focus-visible:border-orange-500/40 transition-all duration-300"
               title="Copiar email"
+              aria-label="Copiar email"
               type="button"
             >
               {copied ? (
@@ -155,24 +198,28 @@ function LinkCard({ link }) {
               )}
             </motion.button>
           )}
-          <ExternalLink className="w-4 h-4 text-white/30 group-hover:text-white/70 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <ExternalLink className="w-4 h-4 text-white/30 group-hover:text-white/70 group-focus-visible:text-white/70 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5" />
         </div>
 
         {/* Bottom highlight line */}
-        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-linear-to-r from-yellow-400 to-orange-500 group-hover:w-4/5 transition-all duration-500 rounded-full" />
+        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-linear-to-r from-yellow-400 to-orange-500 group-hover:w-4/5 group-focus-visible:w-4/5 transition-all duration-500 rounded-full" />
       </motion.a>
 
       {/* Copied feedback toast */}
-      {copied && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4 }}
-          className="mt-2 text-center text-xs text-green-400 font-medium"
-        >
-          ✓ Email copiado para a área de transferência!
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            role="status"
+            aria-live="polite"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            className="mt-2 text-center text-xs text-green-400 font-medium"
+          >
+            ✓ Email copiado para a área de transferência!
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -185,10 +232,12 @@ export default function Contact() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-      className="w-full min-h-screen flex items-center justify-center bg-zinc-900 will-change-transform backface-hidden"
+      className="w-full min-h-dvh flex items-center justify-center bg-zinc-900 will-change-transform backface-hidden"
     >
       <div className="w-full max-w-lg mx-auto px-4 py-20">
         {/* Header */}
+        <PromptLine command="ping contato" className="justify-center flex mb-4" />
+
         <motion.div
           className="text-center mb-10"
           initial="hidden"
@@ -225,17 +274,19 @@ export default function Contact() {
           ))}
         </motion.div>
 
-        {/* Decorative divider */}
+        {/* Closing sign-off */}
         <motion.div
-          className="mt-10 flex items-center justify-center gap-3"
+          className="mt-10 flex flex-wrap items-center justify-center gap-3 px-4 text-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 1, duration: 0.8 }}
         >
-          <span className="h-px w-12 bg-linear-to-r from-transparent to-orange-500/40" />
-
-          <span className="h-px w-12 bg-linear-to-l from-transparent to-orange-500/40" />
+          <span className="h-px w-8 sm:w-12 bg-linear-to-r from-transparent to-orange-500/40" />
+          <span className="text-sm text-white/50">
+            Obrigado pela visita — vamos conversar?
+          </span>
+          <span className="h-px w-8 sm:w-12 bg-linear-to-l from-transparent to-orange-500/40" />
         </motion.div>
       </div>
     </motion.section>
